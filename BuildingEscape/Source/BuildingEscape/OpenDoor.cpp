@@ -21,12 +21,14 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// Find the owning actor
+	//Owner is a pointer, which points to the location in memory of the owner object that this component is attached to.
 	AActor* Owner = GetOwner();
 
 	// Create a rotator
 	FRotator NewRotation = FRotator(0.0f, 60.0f, 0.0f);
 
 	// Set the door rotation
+	//Go to the address that Owner points to, and set that object's rotation
 	Owner->SetActorRotation(NewRotation);
 	
 }
