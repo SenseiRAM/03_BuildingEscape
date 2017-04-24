@@ -32,7 +32,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate; // This is a declaration, the actual definition is done within Unreal Editor itself
 
-	UPROPERTY(EditAnywhere)
 	AActor* ActorThatOpens; // Remember pawn inherits from actor
 	
 };
