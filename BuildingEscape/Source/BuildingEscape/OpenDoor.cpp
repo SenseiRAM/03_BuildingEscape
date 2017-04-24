@@ -19,7 +19,10 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
+void UOpenDoor::OpenDoor()
+{
 	// Find the owning actor
 	//Owner is a pointer, which points to the location in memory of the owner object that this component is attached to.
 	AActor* Owner = GetOwner();
@@ -30,7 +33,6 @@ void UOpenDoor::BeginPlay()
 	// Set the door rotation
 	//Go to the address that Owner points to, and set that object's rotation
 	Owner->SetActorRotation(NewRotation);
-	
 }
 
 
@@ -39,6 +41,12 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// Poll the trigger volume
+	// if the actor that opens is in the volume
+	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+	{
+		// open the door
+		OpenDoor();
+	}
 }
 
