@@ -20,21 +20,26 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Find the owning actor
+	//Owner is a pointer, which points to the location in memory of the owner object that this component is attached to.
+	Owner = GetOwner();
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 void UOpenDoor::OpenDoor()
 {
-	// Find the owning actor
-	//Owner is a pointer, which points to the location in memory of the owner object that this component is attached to.
-	AActor* Owner = GetOwner();
-
-	// Create a rotator
-	FRotator NewRotation = FRotator(0.0f, 60.0f, 0.0f);
 
 	// Set the door rotation
 	//Go to the address that Owner points to, and set that object's rotation
-	Owner->SetActorRotation(NewRotation);
+	Owner->SetActorRotation(FRotator(0.0f, OpenAngle, 0.0f));
+}
+
+void UOpenDoor::CloseDoor()
+{
+
+	// Set the door rotation
+	//Go to the address that Owner points to, and set that object's rotation
+	Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
 }
 
 
@@ -49,6 +54,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	{
 		// open the door
 		OpenDoor();
+		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+	}
+
+	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay)
+	{
+		// open the door
+		CloseDoor();
 	}
 }
 
