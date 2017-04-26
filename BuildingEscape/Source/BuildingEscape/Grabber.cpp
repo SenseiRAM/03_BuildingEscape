@@ -20,7 +20,8 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	//Grabber announces it is ready to roll
+	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty!"));
 	
 }
 
