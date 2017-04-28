@@ -3,6 +3,7 @@
 #include "BuildingEscape.h"
 #include "Grabber.h"
 
+#define OUT
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -31,6 +32,26 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// Get player viewpoint this tick
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+
+	//Log Viewpoint rotation and location
+	FString LogPlayerViewPointLocation = PlayerViewPointLocation.ToString();
+	FString LogPlayerViewPointRotation = PlayerViewPointRotation.ToString();
+	
+	
+	UE_LOG(LogTemp, Warning, TEXT("Player View Location is: %s. Player View Rotation is: %s."),
+		*LogPlayerViewPointLocation,
+		*LogPlayerViewPointRotation
+	);
+
+	// Ray-cast out to reach distance
+
+	// See what we hit
 }
 
