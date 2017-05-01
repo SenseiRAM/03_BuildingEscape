@@ -32,7 +32,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// Get player viewpoint this tick
+	/// Get player viewpoint this tick
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
@@ -40,19 +40,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointRotation
 	);
 
-	//Log Viewpoint rotation and location
-	/*FString LogPlayerViewPointLocation = PlayerViewPointLocation.ToString();
-	FString LogPlayerViewPointRotation = PlayerViewPointRotation.ToString();
-	
-	
-	UE_LOG(LogTemp, Warning, TEXT("Player View Location is: %s. Player View Rotation is: %s."),
-		*LogPlayerViewPointLocation,
-		*LogPlayerViewPointRotation
-	);*/
 	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
 	
 
-	// Draw a red trace in the world to visualize
+	/// Draw a red trace in the world to visualize
 	DrawDebugLine(
 		GetWorld(),
 		PlayerViewPointLocation,
@@ -64,8 +55,31 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		10.0f
 	);
 
-	// Ray-cast out to reach distance
+	/// Setup query parameters
+	/* 
+	What are the parameters for this collision detection
+	We don't want collision detection on all object polygons, so false (i.e. we want basic detection)
+	We want collision to ignore our pawn
+	*/
+	FCollisionQueryParams TraceParameters (FName(TEXT("")), false, GetOwner());
 
-	// See what we hit
+	/// Line-trace AKA Ray-cast out to reach distance
+	FHitResult Hit;
+
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParameters
+	);
+
+	/// Log object hit by ray-cast
+	AActor* ActorHit = Hit.GetActor();
+	
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s hit by grabber."), (*ActorHit->GetName()));
+	}
 }
 
